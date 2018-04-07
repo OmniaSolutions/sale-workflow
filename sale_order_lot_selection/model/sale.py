@@ -50,6 +50,13 @@ class SaleOrder(models.Model):
                 for p in self.picking_ids:
                     for m in p.move_lines:
                         if not m.finished_lots_exist:
+                            vals = {'move_id': m.id,
+                                    'lot_id': line.lot_id.id,
+                                    'product_uom_id': m.product_uom.id,
+                                    'product_id': m.product_id.id,
+                                    'location_id': m.location_id.id,
+                                    'location_dest_id': m.location_dest_id.id}
+                            self.env['stock.move.line'].create(vals)
                             m._action_assign()
                             m.refresh()
         return res
